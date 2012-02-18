@@ -6,21 +6,12 @@ function lmnnDriver(parameters, folds, jobNum, Outpath)
 
     for f = 1:length(folds)
         
-        if ~isfield(folds(f), 'Kvalnorm')
-            folds(f).Kvalnorm = [];
-            folds(f).Ktestnorm = [];
-        end
 
         % Validate over training neighborhood size
 
         bestScore   = -inf;
         bestTrainK  = 0;
         bestTestK   = 0;
-
-        if ~isfield(folds(f), 'Kvalnorm')
-            folds(f).Kvalnorm = [];
-            folds(f).Ktestnorm = [];
-        end
 
 
         for k = parameters.train_k
@@ -32,11 +23,18 @@ function lmnnDriver(parameters, folds, jobNum, Outpath)
             W = L' * L;
             D.pars.train_k = k;
 
-            Perf        = mlr_test( W, parameters.test_k,   ...
-                                    folds(f).Ktrain,        ...
-                                    folds(f).Ytrain,        ...
-                                    folds(f).Kval,          ...
-                                    folds(f).Yval);
+            if ~isempty(folds(f).Kval)
+                Perf        = mlr_test( W, parameters.test_k,   ...
+                                        folds(f).Ktrain,        ...
+                                        folds(f).Ytrain,        ...
+                                        folds(f).Kval,          ...
+                                        folds(f).Yval);
+            else
+                Perf        = mlr_test( W, parameters.test_k,   ...
+                                        folds(f).Ktrain,        ...
+                                        folds(f).Ytrain);
+            end
+
 
             if Perf.KNN > bestScore
                 bestScore = Perf.KNN;
@@ -53,9 +51,14 @@ function lmnnDriver(parameters, folds, jobNum, Outpath)
             scores(f)   = perfs{f}.KNN;
             
             % Compute native scores using best validation k
-            P           = mlr_test( [], parameters.test_k,   ...
-                                    folds(f).Ktrain, folds(f).Ytrain,       ...
-                                    folds(f).Kval, folds(f).Yval);
+            if ~isempty(folds(f).Kval)
+                P           = mlr_test( [], parameters.test_k,   ...
+                                        folds(f).Ktrain, folds(f).Ytrain,       ...
+                                        folds(f).Kval, folds(f).Yval);
+            else
+                P           = mlr_test( [], parameters.test_k,   ...
+                                        folds(f).Ktrain, folds(f).Ytrain);
+            end
             P           = mlr_test( [], P.KNNk,   ...
                                     [folds(f).Ktrain folds(f).Kval], ...
                                     [folds(f).Ytrain ; folds(f).Yval], ...
