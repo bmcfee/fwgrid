@@ -20,7 +20,7 @@ function itmlDriver(parameters, folds, jobNum, Outpath)
                                     folds(f).Ytrain);
         end
 
-        T{f} = struct('W', W, 'test_k', bestTestK);
+        T{f} = struct('W', W, 'test_k', parameters.test_k);
 
         perfs{f}    = mlr_test( T{f}.W, T{f}.test_k,    ...
                                 [folds(f).Ktrain folds(f).Kval], ...
