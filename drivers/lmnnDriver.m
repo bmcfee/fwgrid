@@ -38,10 +38,7 @@ function lmnnDriver(parameters, folds, jobNum, Outpath)
                 end
     
 
-% TODO:   2012-02-20 13:42:37 by Brian McFee <bmcfee@cs.ucsd.edu>
-% quick hack modification for uci-padding experiment 
-%                 if Perf.KNN > bestScore
-                if Perf.AUC > bestScore
+                if Perf.KNN > bestScore
                     bestScore   = Perf.KNN;
                     bestTrainK  = k;
                     bestTestK   = Perf.KNNk;

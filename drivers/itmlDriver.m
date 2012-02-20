@@ -28,8 +28,7 @@ function itmlDriver(parameters, folds, jobNum, Outpath)
                                         folds(f).Ytrain);
             end
             
-%             S   = Perf.KNN;
-            S   = Perf.AUC;
+            S   = Perf.KNN;
             k   = Perf.KNNk;
             if S > bestScore
                 bestScore   = S;
