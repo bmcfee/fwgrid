@@ -4,7 +4,7 @@ function rawDriver(parameters, folds, jobNum, Outpath)
 
     for f = 1:length(folds)
 
-        if ~isempty(folds(f).Kval)
+        if ~isempty(folds(f).Yval)
             P           = mlr_test( [], parameters.test_k,   ...
                                     folds(f).Ktrain(:,:,parameters.kernels), folds(f).Ytrain,       ...
                                     folds(f).Kval(:,:,parameters.kernels), folds(f).Yval);

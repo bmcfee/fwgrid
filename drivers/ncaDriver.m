@@ -8,7 +8,7 @@ function ncaDriver(parameters, folds, jobNum, Outpath)
 
         T{f}        = nca_train(folds(f).Ktrain', folds(f).Ytrain);
 
-        if ~isempty(folds(f).Kval)
+        if ~isempty(folds(f).Yval)
             Perf        = mlr_test( T{f}.C, parameters.test_k,   ...
                                     folds(f).Ktrain,        ...
                                     folds(f).Ytrain,        ...
@@ -31,7 +31,7 @@ function ncaDriver(parameters, folds, jobNum, Outpath)
         scores(f)   = Perf.KNN;
 
         % Compute the native results
-        if ~isempty(folds(f).Kval)
+        if ~isempty(folds(f).Yval)
             Perf        = mlr_test([], parameters.test_k, ...
                                     folds(f).Ktrain, folds(f).Ytrain, ...
                                     folds(f).Kval, folds(f).Yval);
